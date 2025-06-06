@@ -22,7 +22,7 @@ logging.basicConfig(
 )
 logging.getLogger("httpx").setLevel(logging.WARNING)
 
-TOKEN = '8045531024:AAHDowXAKxP2Ohvd0C8ilc7sHbMakETOQ0A'  # !!! החלף בטוקן חדש ובטוח !!!
+TOKEN = '8045531024:AAH4acQo0uWrtU577TmChY73LdR_M_ElA2M'  # !!! החלף בטוקן חדש ובטוח !!!
 TZ_ISRAEL = ZoneInfo("Asia/Jerusalem")
 
 # הגדרת מצבי השיחה
