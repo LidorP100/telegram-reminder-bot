@@ -1,9 +1,10 @@
 import logging
+import os  # <-- הוספנו את הייבוא הזה
 from datetime import datetime, time, timedelta
 from zoneinfo import ZoneInfo
 
 from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
-from telegram.constants import ParseMode  # ייבוא חדש להדגשה
+from telegram.constants import ParseMode
 from telegram.ext import (
     ApplicationBuilder,
     CommandHandler,
@@ -22,7 +23,8 @@ logging.basicConfig(
 )
 logging.getLogger("httpx").setLevel(logging.WARNING)
 
-TOKEN = '8045531024:AAH4acQo0uWrtU577TmChY73LdR_M_ElA2M'  # !!! החלף בטוקן חדש ובטוח !!!
+# --- קריאת הטוקן ממשתנה סביבה (זה השינוי העיקרי!) ---
+TOKEN = os.environ.get('TOKEN')
 TZ_ISRAEL = ZoneInfo("Asia/Jerusalem")
 
 # הגדרת מצבי השיחה
@@ -39,9 +41,8 @@ async def send_reminder_callback(context: ContextTypes.DEFAULT_TYPE):
     chat_id = job.data['chat_id']
     reminder_text = job.data['text']
 
-    # --- שינוי לשליחת טקסט מודגש ---
+    # שליחת טקסט מודגש
     bold_text = f"<b>🔔 תזכורת: {reminder_text}</b>"
-
     await context.bot.send_message(
         chat_id=chat_id,
         text=bold_text,
@@ -226,6 +227,11 @@ async def back_to_main_menu(update: Update, context: ContextTypes.DEFAULT_TYPE) 
 
 def main():
     """הפונקציה הראשית שמגדירה ומפעילה את הבוט."""
+    # בדיקה שהטוקן אכן קיים
+    if not TOKEN:
+        logging.error("שגיאה קריטית: משתנה הסביבה TOKEN לא הוגדר.")
+        return
+
     job_queue = JobQueue()
     app = ApplicationBuilder().token(TOKEN).job_queue(job_queue).build()
 
